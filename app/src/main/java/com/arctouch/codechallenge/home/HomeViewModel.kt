@@ -42,7 +42,6 @@ class HomeViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun loadMovies() {
-
         compDisposable.add(
                 tmdbApi.upcomingMovies(1, TmdbApi.DEFAULT_REGION)
                         .subscribeOn(Schedulers.io())

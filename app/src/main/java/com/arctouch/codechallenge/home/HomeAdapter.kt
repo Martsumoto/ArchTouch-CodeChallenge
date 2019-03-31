@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.util.MovieImageUrlBuilder
+import com.arctouch.codechallenge.util.setPosterUrl
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.movie_item.view.*
@@ -25,10 +26,7 @@ class HomeAdapter(private val movies: List<Movie>,
             genresTextView.text = movie.genres?.joinToString(separator = ", ") { it.name }
             releaseDateTextView.text = movie.releaseDate
 
-            Glide.with(this)
-                .load(movie.posterPath?.let { movieImageUrlBuilder.buildPosterUrl(it) })
-                .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-                .into(this.posterImageView)
+            posterImageView.setPosterUrl(this.context, movie.posterPath)
 
             setOnClickListener{ listener(movie) }
         }

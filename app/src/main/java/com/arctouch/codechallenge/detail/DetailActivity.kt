@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.base.BaseActivity
 import com.arctouch.codechallenge.model.Movie
-import com.arctouch.codechallenge.util.MovieImageUrlBuilder
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.arctouch.codechallenge.util.setBackdropUrl
+import com.arctouch.codechallenge.util.setPosterUrl
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import kotlinx.android.synthetic.main.detail_activity.*
 
@@ -54,15 +53,8 @@ class DetailActivity : BaseActivity() {
         tvOverview.text = movie.overview
         tvReleaseDate.text = movie.releaseDate
 
-        Glide.with(this)
-            .load(movie.posterPath?.let { MovieImageUrlBuilder().buildPosterUrl(it) })
-            .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-            .into(posterImageView)
-
-        Glide.with(this)
-            .load(movie.backdropPath?.let { MovieImageUrlBuilder().buildBackdropUrl(it) })
-            .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-            .into(ivBackdrop)
+        posterImageView.setPosterUrl(this, movie.posterPath)
+        ivBackdrop.setBackdropUrl(this, movie.backdropPath)
     }
 
     private fun setupToolbar() {
