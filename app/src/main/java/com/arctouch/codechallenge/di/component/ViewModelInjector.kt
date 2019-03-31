@@ -1,6 +1,7 @@
 package com.arctouch.codechallenge.di.component
 
 import android.app.Application
+import com.arctouch.codechallenge.detail.DetailViewModel
 import com.arctouch.codechallenge.di.module.NetworkModule
 import com.arctouch.codechallenge.home.HomeViewModel
 import dagger.BindsInstance
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 ])
 interface ViewModelInjector {
     fun inject(homeViewModel: HomeViewModel)
+    fun inject(detailViewModel: DetailViewModel)
 
     @Component.Builder
     interface Builder {

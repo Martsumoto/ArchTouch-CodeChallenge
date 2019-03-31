@@ -1,7 +1,8 @@
 package com.arctouch.codechallenge.base
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.arctouch.codechallenge.detail.DetailViewModel
 import com.arctouch.codechallenge.di.component.DaggerViewModelInjector
 import com.arctouch.codechallenge.di.component.ViewModelInjector
 import com.arctouch.codechallenge.di.module.NetworkModule
@@ -21,6 +22,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
     private fun inject() {
         when(this) {
             is HomeViewModel -> injector.inject(this)
+            is DetailViewModel -> injector.inject(this)
         }
     }
 }

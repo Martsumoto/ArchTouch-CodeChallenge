@@ -1,7 +1,7 @@
 package com.arctouch.codechallenge.home
 
 import android.app.Application
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.arctouch.codechallenge.api.TmdbApi
 import com.arctouch.codechallenge.base.BaseViewModel
 import com.arctouch.codechallenge.data.Cache
