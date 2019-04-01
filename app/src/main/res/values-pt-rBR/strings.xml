@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="retry">Tentar novamente</string>
+    <string name="error_movie_paging_list">Não foi possível carregar mais filmes</string>
+
+    <string name="search_text_too_short">Digite pelo menos 3 caracteres</string>
+
+    <string name="bottom_navigation_upcoming">Próximos</string>
+    <string name="bottom_navigation_search">Buscar</string>
+    <string name="search_movie">Buscar filme</string>
+    <string name="movie_detail_error">Não foi possível carregar detalhes do filme</string>
+    <string name="movie_info_error">Erro ao carregar dados dos filmes</string>
+</resources>
