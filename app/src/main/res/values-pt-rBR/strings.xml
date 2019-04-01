@@ -8,4 +8,6 @@
     <string name="bottom_navigation_upcoming">Próximos</string>
     <string name="bottom_navigation_search">Buscar</string>
     <string name="search_movie">Buscar filme</string>
+    <string name="movie_detail_error">Não foi possível carregar detalhes do filme</string>
+    <string name="movie_info_error">Erro ao carregar dados dos filmes</string>
 </resources>

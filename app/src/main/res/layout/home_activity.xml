@@ -34,4 +34,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"/>
 
+
+    <TextView
+            android:id="@+id/tvErrorMessage"
+            android:visibility="gone"
+            style="@style/ErrorMessage"
+            android:text="@string/movie_info_error"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

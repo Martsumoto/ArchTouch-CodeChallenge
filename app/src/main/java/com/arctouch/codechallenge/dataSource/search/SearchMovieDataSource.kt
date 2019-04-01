@@ -10,6 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class SearchMovieDataSource(private val tmdbApi: TmdbApi,
                             private val compositeDisposable: CompositeDisposable,
@@ -24,6 +25,8 @@ class SearchMovieDataSource(private val tmdbApi: TmdbApi,
         updateState(State.LOADING)
         compositeDisposable.add(
             tmdbApi.searchMovies(1, searchText)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                             response ->
@@ -31,6 +34,7 @@ class SearchMovieDataSource(private val tmdbApi: TmdbApi,
                         callback.onResult(response.results, null, 2)
                     },
                     {
+                        Timber.e(it)
                         updateState(State.ERROR)
                         setRetry(Action { loadInitial(params, callback) })
                     }
@@ -42,6 +46,8 @@ class SearchMovieDataSource(private val tmdbApi: TmdbApi,
         updateState(State.LOADING)
         compositeDisposable.add(
             tmdbApi.searchMovies(params.key.toLong(), searchText)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                             response ->
@@ -49,6 +55,7 @@ class SearchMovieDataSource(private val tmdbApi: TmdbApi,
                         callback.onResult(response.results, params.key + 1)
                     },
                     {
+                        Timber.e(it)
                         updateState(State.ERROR)
                         setRetry(Action { loadAfter(params, callback) })
                     }

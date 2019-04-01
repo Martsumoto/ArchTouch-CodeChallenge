@@ -9,6 +9,7 @@ import com.arctouch.codechallenge.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 class DetailViewModel(application: Application) : BaseViewModel(application) {
@@ -20,6 +21,8 @@ class DetailViewModel(application: Application) : BaseViewModel(application) {
 
     val movieDetailLiveData : MutableLiveData<Movie> = MutableLiveData()
 
+    val isLoadErrorLiveData : MutableLiveData<Boolean> = MutableLiveData()
+
     override fun onCleared() {
         super.onCleared()
         compDisposable.clear()
@@ -30,9 +33,15 @@ class DetailViewModel(application: Application) : BaseViewModel(application) {
                 tmdbApi.movie(id.toLong())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            movieDetailLiveData.value = it
-                        }
+                        .subscribe(
+                            { movie ->
+                                movieDetailLiveData.value = movie
+                                isLoadErrorLiveData.value = false
+                            },
+                            {
+                                Timber.e(it)
+                                isLoadErrorLiveData.value = true
+                            })
         )
 
         return movieDetailLiveData

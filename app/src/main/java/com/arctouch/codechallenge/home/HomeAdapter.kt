@@ -50,4 +50,9 @@ class HomeAdapter(private val retryCallback: () -> Unit,
         } else {
             R.layout.movie_item
         }
+
+    fun setState(state: State) {
+        this.state = state
+        notifyItemChanged(super.getItemCount())
+    }
 }

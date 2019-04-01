@@ -30,25 +30,19 @@ class DetailActivity : AppCompatActivity() {
 
         this.setupToolbar()
 
+        this.showProgressBar()
         viewModel.loadMovie(intent.getIntExtra(MOVIE_ID, 0)).observe(this,
             Observer { showDetails(it) })
-    }
 
-    fun showProgressBar() {
-        content.visibility = View.GONE
-//        progressBar.visibility = View.VISIBLE
-        tvErrorMessage.visibility = View.GONE
-    }
-
-    fun showLoadError(messageId : Int) {
-        content.visibility = View.GONE
-//        progressBar.visibility = View.GONE
-        tvErrorMessage.visibility = View.VISIBLE
-
-        tvErrorMessage.text = getString(messageId)
+        viewModel.isLoadErrorLiveData.observe(this, Observer {isError ->
+            if (isError) {
+                this.showLoadError(R.string.movie_detail_error)
+            }
+        })
     }
 
     private fun showDetails(movie: Movie) {
+        this.showContent()
         tvGenres.text = movie.genres?.joinToString(separator = ", ") { it.name }
         tvOverview.text = movie.overview
         tvReleaseDate.text = movie.releaseDate
@@ -64,5 +58,25 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         (collapsingToolbar as CollapsingToolbarLayout).title = name ?: ""
+    }
+
+    fun showContent() {
+        content.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+        tvErrorMessage.visibility = View.GONE
+    }
+
+    fun showProgressBar() {
+        content.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        tvErrorMessage.visibility = View.GONE
+    }
+
+    fun showLoadError(messageId : Int) {
+        content.visibility = View.GONE
+        progressBar.visibility = View.GONE
+        tvErrorMessage.visibility = View.VISIBLE
+
+        tvErrorMessage.text = getString(messageId)
     }
 }

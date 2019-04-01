@@ -11,8 +11,14 @@ import kotlinx.android.synthetic.main.network_state_item.view.*
 class NetworkStateItemViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 
     fun bind(status: State?) {
-        itemView.progressBar.visibility = if (status == State.LOADING) View.VISIBLE else View.INVISIBLE
-        itemView.tvErrorMessage.visibility = if (status == State.ERROR) View.VISIBLE else View.INVISIBLE
+        if (status == State.DONE) {
+            itemView.btRetry.visibility = View.GONE
+            itemView.progressBar.visibility = View.GONE
+            itemView.tvErrorMessage.visibility = View.GONE
+        } else {
+            itemView.progressBar.visibility = if (status == State.LOADING) View.VISIBLE else View.INVISIBLE
+            itemView.tvErrorMessage.visibility = if (status == State.ERROR) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     companion object {

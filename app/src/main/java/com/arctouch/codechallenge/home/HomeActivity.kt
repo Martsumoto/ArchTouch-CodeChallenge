@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.arctouch.codechallenge.BuildConfig
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.home.fragment.SearchMovieListFragment
 import com.arctouch.codechallenge.home.fragment.UpcomingMovieListFragment
 import kotlinx.android.synthetic.main.home_activity.*
+import timber.log.Timber
 
 class HomeActivity : AppCompatActivity() {
 
@@ -29,17 +31,27 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         setContentView(R.layout.home_activity)
 
 
         selectedFragment = savedInstanceState?.getInt(SELECTED_FRAGMENT)
 
-        viewModel.isGenresLoadedLiveData.observe(this, Observer {
-            setFragmentFromId(selectedFragment?:R.id.action_upcoming)
-            this.setupBottomNavigation()
+        viewModel.isGenresLoadedLiveData.observe(this, Observer {isGenresLoaded ->
+            if (isGenresLoaded) {
+                setFragmentFromId(selectedFragment ?: R.id.action_upcoming)
+                this.setupBottomNavigation()
 
-            frameLayout.visibility = View.VISIBLE
-            progressBar.visibility = View.GONE
+                frameLayout.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+                tvErrorMessage.visibility = View.GONE
+            } else {
+                frameLayout.visibility = View.GONE
+                progressBar.visibility = View.GONE
+                tvErrorMessage.visibility = View.VISIBLE
+            }
         })
     }
 

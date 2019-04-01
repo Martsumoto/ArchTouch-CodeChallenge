@@ -23,6 +23,8 @@ class UpcomingMovieDataSource(private val tmdbApi: TmdbApi,
         updateState(State.LOADING)
         compositeDisposable.add(
             tmdbApi.upcomingMovies(1, TmdbApi.DEFAULT_REGION)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                             response ->
@@ -30,6 +32,7 @@ class UpcomingMovieDataSource(private val tmdbApi: TmdbApi,
                         callback.onResult(response.results, null, 2)
                     },
                     {
+//                        Timber.e(it)
                         updateState(State.ERROR)
                         setRetry(Action { loadInitial(params, callback) })
                     }
@@ -41,6 +44,8 @@ class UpcomingMovieDataSource(private val tmdbApi: TmdbApi,
         updateState(State.LOADING)
         compositeDisposable.add(
             tmdbApi.upcomingMovies(params.key.toLong(), TmdbApi.DEFAULT_REGION)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                             response ->
@@ -48,6 +53,7 @@ class UpcomingMovieDataSource(private val tmdbApi: TmdbApi,
                         callback.onResult(response.results, params.key + 1)
                     },
                     {
+//                        Timber.e(it)
                         updateState(State.ERROR)
                         setRetry(Action { loadAfter(params, callback) })
                     }
