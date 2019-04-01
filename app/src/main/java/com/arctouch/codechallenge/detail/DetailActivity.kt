@@ -2,18 +2,18 @@ package com.arctouch.codechallenge.detail
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.arctouch.codechallenge.R
-import com.arctouch.codechallenge.base.BaseActivity
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.util.setBackdropUrl
 import com.arctouch.codechallenge.util.setPosterUrl
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import kotlinx.android.synthetic.main.detail_activity.*
 
-class DetailActivity : BaseActivity() {
+class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val MOVIE_ID = "MovieId"

@@ -4,4 +4,10 @@
 
     <string name="retry">Try again</string>
     <string name="error_movie_paging_list">Couldn\'t load more movies</string>
+
+    <string name="search_text_too_short">Type at least the 3 characters</string>
+
+    <string name="bottom_navigation_upcoming">Upcoming</string>
+    <string name="bottom_navigation_search">Search</string>
+    <string name="search_movie">Search movie</string>
 </resources>

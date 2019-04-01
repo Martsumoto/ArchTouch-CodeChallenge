@@ -1,4 +1,4 @@
-package com.arctouch.codechallenge.dataSource
+package com.arctouch.codechallenge.dataSource.upcoming
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
@@ -11,8 +11,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 
-class MovieDataSource(private val tmdbApi: TmdbApi,
-                      private val compositeDisposable: CompositeDisposable
+class UpcomingMovieDataSource(private val tmdbApi: TmdbApi,
+                              private val compositeDisposable: CompositeDisposable
 )
     : PageKeyedDataSource<Int, Movie>() {
 
@@ -22,8 +22,7 @@ class MovieDataSource(private val tmdbApi: TmdbApi,
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movie>) {
         updateState(State.LOADING)
         compositeDisposable.add(
-            tmdbApi.upcomingMovies(1)
-//            tmdbApi.upcomingMovies(1, TmdbApi.DEFAULT_REGION)
+            tmdbApi.upcomingMovies(1, TmdbApi.DEFAULT_REGION)
                 .subscribe(
                     {
                             response ->
@@ -41,8 +40,7 @@ class MovieDataSource(private val tmdbApi: TmdbApi,
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movie>) {
         updateState(State.LOADING)
         compositeDisposable.add(
-            tmdbApi.upcomingMovies(params.key.toLong())
-//            tmdbApi.upcomingMovies(params.key.toLong(), TmdbApi.DEFAULT_REGION)
+            tmdbApi.upcomingMovies(params.key.toLong(), TmdbApi.DEFAULT_REGION)
                 .subscribe(
                     {
                             response ->
