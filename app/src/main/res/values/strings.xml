@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Code Challenge</string>
     <string name="movie_and_genres">%s - %s</string>
+
+    <string name="retry">Try again</string>
+    <string name="error_movie_paging_list">Couldn\'t load more movies</string>
 </resources>

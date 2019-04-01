@@ -2,7 +2,6 @@ package com.arctouch.codechallenge.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.arctouch.codechallenge.R
@@ -21,12 +20,12 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
 
-        viewModel.moviesLiveData.observe(this,
-                Observer {
-                    recyclerView.adapter = HomeAdapter(it ?: emptyList())
-                    { movie -> onMovieClick(movie) }
-                    progressBar.visibility = View.GONE
-                })
+        val movieListAdapter = HomeAdapter ({viewModel.retry() }, this::onMovieClick)
+        recyclerView.adapter = movieListAdapter
+
+        viewModel.movieList.observe(this, Observer {
+            movieListAdapter.submitList(it)
+        })
     }
 
     private fun onMovieClick(movie: Movie) {

@@ -1,10 +1,14 @@
 package com.arctouch.codechallenge.home
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.arctouch.codechallenge.api.TmdbApi
 import com.arctouch.codechallenge.base.BaseViewModel
 import com.arctouch.codechallenge.data.Cache
+import com.arctouch.codechallenge.dataSource.MovieDataSourceFactory
 import com.arctouch.codechallenge.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,7 +24,20 @@ class HomeViewModel(application: Application) : BaseViewModel(application) {
 
     val moviesLiveData : MutableLiveData<List<Movie>> = MutableLiveData()
 
+    private val movieDataSourceFactory : MovieDataSourceFactory
+
+    var movieList : LiveData<PagedList<Movie>>
+
     init {
+        movieDataSourceFactory = MovieDataSourceFactory(compDisposable, tmdbApi)
+        val config = PagedList.Config.Builder()
+            .setPageSize(2)
+            .setInitialLoadSizeHint(4)
+            .setEnablePlaceholders(false)
+            .build()
+
+        movieList = LivePagedListBuilder<Int, Movie>(movieDataSourceFactory, config).build()
+
         loadGenres()
     }
 
@@ -53,5 +70,9 @@ class HomeViewModel(application: Application) : BaseViewModel(application) {
                             moviesLiveData.value = moviesWithGenres
                         }
         )
+    }
+
+    fun retry() {
+        movieDataSourceFactory.movieDataSourceLiveData.value?.retry()
     }
 }

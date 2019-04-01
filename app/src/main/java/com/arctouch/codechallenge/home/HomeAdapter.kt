@@ -1,44 +1,53 @@
 package com.arctouch.codechallenge.home
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.model.Movie
-import com.arctouch.codechallenge.util.MovieImageUrlBuilder
-import com.arctouch.codechallenge.util.setPosterUrl
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.movie_item.view.*
+import com.arctouch.codechallenge.util.State
 
-class HomeAdapter(private val movies: List<Movie>,
-                  private val listener: (Movie) -> Unit) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(private val retryCallback: () -> Unit,
+                  private val listener: (Movie) -> Unit)
+    : PagedListAdapter<Movie, RecyclerView.ViewHolder>(MovieDiffCallback) {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private var state = State.LOADING
 
-        private val movieImageUrlBuilder = MovieImageUrlBuilder()
+    companion object {
+        val MovieDiffCallback = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem.title == newItem.title
+            }
 
-        fun bind(movie: Movie,
-                 listener : (Movie) -> Unit
-        ) = with(itemView) {
-            titleTextView.text = movie.title
-            genresTextView.text = movie.genres?.joinToString(separator = ", ") { it.name }
-            releaseDateTextView.text = movie.releaseDate
-
-            posterImageView.setPosterUrl(this.context, movie.posterPath)
-
-            setOnClickListener{ listener(movie) }
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            R.layout.movie_item -> MovieItemViewHolder.create(parent)
+            R.layout.network_state_item -> NetworkStateItemViewHolder.create(parent, retryCallback)
+            else -> throw IllegalArgumentException("unknown view type $viewType")
+        }
     }
 
-    override fun getItemCount() = movies.size
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when(getItemViewType(position)) {
+            R.layout.movie_item -> (holder as MovieItemViewHolder).bind(getItem(position), listener)
+            R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bind(state)
+        }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(movies[position], listener)
+    }
 
+    private fun hasExtraRow() = state != State.DONE
+
+    override fun getItemViewType(position: Int): Int =
+        if (hasExtraRow() && position == itemCount - 1) {
+            R.layout.network_state_item
+        } else {
+            R.layout.movie_item
+        }
 }
